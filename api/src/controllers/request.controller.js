@@ -86,3 +86,17 @@ export const rejectRequest = async (req, res) => {
         res.status(500).json({ message: 'Something went wrong', error });
     }
 };
+
+export const getRequestedFood = async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const requests = await Request.find({ receiver: userId })
+            .populate('foodPost', 'foodName')
+            .populate('receiver', 'name');
+
+        res.status(200).json(requests);
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong', error });
+    }
+}
