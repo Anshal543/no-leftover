@@ -43,7 +43,7 @@ export const getDonorRequests = async (req, res) => {
 
 // controllers/requestController.js
 export const acceptRequest = async (req, res) => {
-    const { requestId, foodPostId } = req.body;
+    const { requestId, foodPostId, pickupTime } = req.body;  // Include pickupTime in the request
 
     try {
         // Find request
@@ -52,6 +52,7 @@ export const acceptRequest = async (req, res) => {
 
         // Update request status to 'Accepted'
         request.status = 'Accepted';
+        request.pickupTime = pickupTime;  // Set pickup time
         await request.save();
 
         // Update food post status to 'Claimed'
@@ -61,7 +62,7 @@ export const acceptRequest = async (req, res) => {
         foodPost.status = 'Claimed';
         await foodPost.save();
 
-        res.status(200).json({ message: 'Request accepted and food claimed', request, foodPost });
+        res.status(200).json({ message: 'Request accepted and food claimed with pickup time set', request, foodPost });
     } catch (error) {
         res.status(500).json({ message: 'Something went wrong', error });
     }
